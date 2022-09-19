@@ -1,5 +1,6 @@
 from models.token import Token
 from utils.token_definition import tokens_definition
+import sys
 
 
 def parse_cast_list_to_string(input_cast: list) -> str:
@@ -26,13 +27,14 @@ def check_valid_cast(cash_list: list) -> (bool, str):
 
 
 def main():
+    args = sys.argv
     letter_map_list = []
     token_list = []
     input_cast = []
     current_line = 0
 
     # read file to input
-    f = open("./teste.txt", "r")
+    f = open(args[1] if len(args) > 1 else "./teste.pro", "r")
 
     # read letters in te document and save position in the doc
     for line in f:
