@@ -39,6 +39,8 @@ def main():
         current_column_position = 0
         current_line = current_line + 1
         for letter in line:
+            if letter == "%":
+                break
             if letter != " " and letter != "\n":
                 letter_map_list.append({"letter": letter, "column": current_column_position, "line": current_line})
             current_column_position = current_column_position + 1
