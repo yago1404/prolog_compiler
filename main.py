@@ -2,6 +2,13 @@ from models.token import Token
 from utils.token_definition import tokens_definition
 
 
+def parse_cast_list_to_string(input_cast: list) -> str:
+    input_cast_string = ""
+    for cash_map in input_cast:
+        input_cast_string = input_cast_string + cash_map['letter']
+    return input_cast_string
+
+
 # Check if token is exist based on token tokens_definition
 def check_valid_token(string: str) -> (bool, str):
     for token_type in tokens_definition:
@@ -11,7 +18,7 @@ def check_valid_token(string: str) -> (bool, str):
 
 
 # convert token cast list in string and check if token_list_string exist based on token tokens_definition
-def check_valid_cash(cash_list: list) -> (bool, str):
+def check_valid_cast(cash_list: list) -> (bool, str):
     string_cash = ""
     for cash_map in cash_list:
         string_cash = string_cash + cash_map['letter']
@@ -38,24 +45,35 @@ def main():
 
     # check validation of token from the file and save in cast if not valid
     for letter_map in letter_map_list:
-        if check_valid_token(letter_map['letter'])[0]:
+        # check if exist, if True add letter to cast and check validator of the token and check if token is valid
+        # and clear cast if True
+        if len(input_cast) > 0:
+            input_cast.append(letter_map)
+            cast_validate_tuple = check_valid_cast(input_cast)
+            if cast_validate_tuple[0]:
+                input_cast_string = parse_cast_list_to_string(input_cast)
+                token_list.append(Token(letter_map['column'], letter_map['line'], input_cast_string,
+                                        cast_validate_tuple[1]))
+                input_cast = []
+            elif check_valid_token(letter_map['letter'])[0]:
+                input_cast.pop()
+                raise Exception("Prolog Lexical Error. \"" + parse_cast_list_to_string(input_cast) + "\" is not recognized")
+
+        # check if the letter is a simple Token, if is a Token add to list and continue file read
+        elif check_valid_token(letter_map['letter'])[0]:
             token_list.append(Token(letter_map['column'], letter_map['line'], letter_map['letter'],
                                     check_valid_token(letter_map['letter'])[1]))
-            input_cast = []
-        elif len(input_cast) > 0 and check_valid_cash(input_cast)[0]:
-
-            input_cast = []
+        # if not recognized and cast is empty, add to cast
         else:
             input_cast.append(letter_map)
 
     # check if cast have letters in EOF. If True, is not valid
     if len(input_cast) > 0:
-        input_cast_string = ""
-        for cash_map in input_cast:
-            input_cast_string = input_cast_string + cash_map['letter']
+        input_cast_string = parse_cast_list_to_string(input_cast)
         raise Exception("Prolog Lexical Error. The argument \'" + input_cast_string + "\' not recognized")
     if token_list[len(token_list) - 1].token != ".":
-        raise Exception("Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
+        raise Exception(
+            "Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
     print('The lexical compiled archive is valid')
 
 

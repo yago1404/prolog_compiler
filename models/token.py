@@ -5,3 +5,9 @@ class Token:
         self.token = token
         self.token_type = token_type
 
+    def __str__(self):
+        return "token -> \"" + self.token + "\" token type -> " + self.token_type + " column -> " + \
+               str(self.column_position) + " line -> " + str(self.row_number)
+
+    def __repr__(self):
+        return self.__str__()
