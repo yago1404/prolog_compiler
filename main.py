@@ -48,13 +48,15 @@ def main():
         else:
             input_cast.append(letter_map)
 
-    # check if is cast have letters in EOF. If True, is not valid
+    # check if cast have letters in EOF. If True, is not valid
     if len(input_cast) > 0:
         input_cast_string = ""
         for cash_map in input_cast:
             input_cast_string = input_cast_string + cash_map['letter']
         raise Exception("Prolog Lexical Error. The argument \'" + input_cast_string + "\' not recognized")
-    print('Valid lexical program')
+    if token_list[len(token_list) - 1].token != ".":
+        raise Exception("Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
+    print('The lexical compiled archive is valid')
 
 
 if __name__ == '__main__':
