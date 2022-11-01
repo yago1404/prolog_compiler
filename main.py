@@ -11,15 +11,17 @@ def parse_cast_list_to_string(input_cast: list) -> str:
 
 
 # Check if token is exist based on token tokens_definition
-def check_valid_token(string: str) -> (bool, str):
+def check_valid_token(string: str) -> (bool, list):
+    tokens = []
     for token_type in tokens_definition:
         if tokens_definition[token_type].count(string) > 0:
-            return True, token_type
-    return False, ''
+            # return True, token_type
+            tokens.append(token_type)
+    return (True, tokens) if len(tokens) > 0 else (False, [])
 
 
 # convert token cast list in string and check if token_list_string exist based on token tokens_definition
-def check_valid_cast(cash_list: list) -> (bool, str):
+def check_valid_cast(cash_list: list) -> (bool, list):
     string_cash = ""
     for cash_map in cash_list:
         string_cash = string_cash + cash_map['letter']
@@ -79,6 +81,8 @@ def main():
         raise Exception(
             "Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
     print('The lexical compiled archive is valid')
+
+    print(token_list)
 
 
 if __name__ == '__main__':
