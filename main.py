@@ -1,3 +1,4 @@
+from typing import Tuple
 from models.token import Token
 from utils.token_definition import tokens_definition
 import sys
@@ -11,7 +12,7 @@ def parse_cast_list_to_string(input_cast: list) -> str:
 
 
 # Check if token is exist based on token tokens_definition
-def check_valid_token(string: str) -> (bool, list):
+def check_valid_token(string: str) -> tuple[bool, list]:
     tokens = []
     for token_type in tokens_definition:
         if tokens_definition[token_type].count(string) > 0:
@@ -21,7 +22,7 @@ def check_valid_token(string: str) -> (bool, list):
 
 
 # convert token cast list in string and check if token_list_string exist based on token tokens_definition
-def check_valid_cast(cash_list: list) -> (bool, list):
+def check_valid_cast(cash_list: list) -> tuple[bool, list]:
     string_cash = ""
     for cash_map in cash_list:
         string_cash = string_cash + cash_map['letter']
