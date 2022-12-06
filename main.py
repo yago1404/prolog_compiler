@@ -10,7 +10,7 @@ def parse_cast_list_to_string(input_cast: list) -> str:
     return input_cast_string
 
 
-# Check if token is exist based on token tokens_definition
+# Check if token exist based on token tokens_definition
 def check_valid_token(string: str) -> (bool, str):
     for token_type in tokens_definition:
         if tokens_definition[token_type].count(string) > 0:
