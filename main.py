@@ -1,5 +1,6 @@
 from typing import Tuple
 from models.token import Token
+from symbol_table.create_symbol_table import create_symbol_table
 from utils.token_definition import tokens_definition
 import sys
 
@@ -83,7 +84,7 @@ def main():
             "Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
     print('The lexical compiled archive is valid')
 
-    print(token_list)
+    create_symbol_table(token_list)
 
 
 if __name__ == '__main__':
