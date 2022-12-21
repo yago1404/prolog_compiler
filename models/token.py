@@ -6,9 +6,10 @@ class Token:
         self.token_type = token_type
 
     def __str__(self):
-        tokens = ''
+        tokens = '['
         for i in self.token_type:
             tokens = tokens + i + ', '
+        tokens += ']'
         return "token -> \"" + self.token + "\" token type -> " + tokens + " column -> " + \
                str(self.column_position) + " line -> " + str(self.row_number)
 

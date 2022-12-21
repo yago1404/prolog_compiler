@@ -27,5 +27,6 @@ tokens_definition = {
     "LIST": ["[]", "."],
     "EASYLIST": ["[", "]"],
     "DIVIDEDLIST": ["[", "|", "]"],
-    "TERMS": [","]
+    "TERMS": [","],
+    "SPACER": [" ", "\n"]
 }

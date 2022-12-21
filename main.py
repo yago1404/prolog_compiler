@@ -1,4 +1,4 @@
-from typing import Tuple
+from models.id import Id
 from models.token import Token
 from symbol_table.create_symbol_table import create_symbol_table
 from utils.token_definition import tokens_definition
@@ -47,8 +47,7 @@ def main():
         for letter in line:
             if letter == "%":
                 break
-            if letter != " " and letter != "\n":
-                letter_map_list.append({"letter": letter, "column": current_column_position, "line": current_line})
+            letter_map_list.append({"letter": letter, "column": current_column_position, "line": current_line})
             current_column_position = current_column_position + 1
 
     # check validation of token from the file and save in cast if not valid
@@ -75,6 +74,41 @@ def main():
         else:
             input_cast.append(letter_map)
 
+    id_index = 1
+    token_list_index = 0
+    id_cast_string = ""
+    is_string = False
+    aux_token_list = token_list
+    token_list = []
+
+    for token in aux_token_list:
+        if is_string and token.token_type.count("ATOM") > 0:
+            token_list.append(Id(id_cast_string, id_index))
+            token_list.append(token)
+            id_cast_string = ""
+            id_index += 1
+            is_string = False
+            token_list_index += 1
+            continue
+        if token.token_type.count("ATOM") > 0:
+            token_list.append(token)
+            is_string = True
+            token_list_index += 1
+            continue
+        if is_string:
+            id_cast_string += token.token
+            token_list_index += 1
+            continue
+        if token.token_type.count('CHAR') > 0 or token.token_type.count('UPRCHAR') > 0 or token.token_type.count('NUMBERCHAR') > 0 or token.token_type.count('LWRCHAR') > 0:
+            id_cast_string += token.token
+            if not ((aux_token_list[token_list_index + 1].token_type.count('CHAR') > 0 or aux_token_list[token_list_index + 1].token_type.count('UPRCHAR') or aux_token_list[token_list_index + 1].token_type.count('NUMBERCHAR') or aux_token_list[token_list_index + 1].token_type.count('LWRCHAR')) and aux_token_list[token_list_index + 1].column_position == token.column_position+1):
+                token_list.append(Id(id_cast_string, id_index))
+                id_cast_string = ""
+                id_index += 1
+        if token.token_type.count("SPACER") == 0 and not (token.token_type.count('CHAR') > 0 or token.token_type.count('UPRCHAR') > 0 or token.token_type.count('NUMBERCHAR') > 0 or token.token_type.count('LWRCHAR') > 0):
+            token_list.append(token)
+        token_list_index += 1
+
     # check if cast have letters in EOF. If True, is not valid
     if len(input_cast) > 0:
         input_cast_string = parse_cast_list_to_string(input_cast)
@@ -84,7 +118,10 @@ def main():
             "Prolog Lexical Error. \"" + token_list[len(token_list) - 1].token + "\" is not a terminal symbol")
     print('The lexical compiled archive is valid')
 
-    create_symbol_table(token_list)
+    for i in token_list:
+        print(i)
+
+    # create_symbol_table(token_list)
 
 
 if __name__ == '__main__':
